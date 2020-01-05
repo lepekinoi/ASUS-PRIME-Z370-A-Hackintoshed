@@ -12,9 +12,10 @@ The config i'm using :
 
 iMacPro1,1
 
-Full Working
-With VEGA 64 -> No fan speed problem
-No sleep problem
-No black screen
+-Full Working
+
+-With VEGA 64 -> No fan speed problem
+-No sleep problem
+-No black screen
 
 Clover Theme : mimi black
