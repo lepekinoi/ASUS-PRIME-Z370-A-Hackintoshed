@@ -1,4 +1,4 @@
-# PRIME-Z370-A-Hackintoshed
+# ASUS-PRIME-Z370-A-Hackintoshed
 
 Tested on :
 - Mojave 10.14.x
