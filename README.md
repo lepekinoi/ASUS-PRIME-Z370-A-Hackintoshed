@@ -24,3 +24,7 @@ iMacPro1,1
 -No black screen
 
 Clover Theme : mimi black
+
+For Step 2: After you've got to built you're own SMBIOS values with iMacPro1,1
+
+Good luck!
