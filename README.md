@@ -1,6 +1,9 @@
 # PRIME-Z370-A-Hackintoshed
 
-Tested on Mojave, Catalina 10.15,10.15.1,10.15.2
+Tested on :
+- Mojave 10.14.x
+
+- Catalina 10.15.x
 
 The config i'm using :
 
