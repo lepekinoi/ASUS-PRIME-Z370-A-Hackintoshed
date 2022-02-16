@@ -2,8 +2,9 @@
 
 Tested on :
 - Mojave 10.14.x
-
 - Catalina 10.15.x
+- BigSur 11.6.2 (20G314)
+- Monterrey 12 - working on it (bluetooth problems)
 
 The config i'm using :
 
