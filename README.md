@@ -14,17 +14,20 @@ The config i'm using :
 - Wifi + Bluetooth PCI Card : https://www.amazon.fr/gp/offer-listing/B00MBP25UK/ref=dp_olp_new_mbc?ie=UTF8&condition=new
 - Sabrent Rocket 4.0 500GB (Largeur du câble :	x4 - Vitesse de la liaison :	8.0 GT/s)
 
-SMBIOS:
+SMBIOS: Working on DRM ...
 iMacPro1,1
 or
 iMac19,1
 
 -Full Working
 
--With VEGA 64 -> No fan speed problem
+-With VEGA 64 -> No fan speed problem -no more patch neeeded
 -No sleep problem
 -No black screen
 
-For Step 2: After you've got to built you're own SMBIOS values with iMacPro1,1
+For Step 2: After you've got to built you're own SMBIOS values with iMacPro1,1 or iMac19,1
+iGpu disable or not in BIOS
+iMacPro1,1 must be disable
+iMac19,1 could be enable or not, systeml not affected
 
 Good luck!
