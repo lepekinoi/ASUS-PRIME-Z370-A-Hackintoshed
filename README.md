@@ -4,7 +4,7 @@ Tested on :
 - Mojave 10.14.x
 - Catalina 10.15.x
 - BigSur 11.6.2 (20G314)
-- Monterrey 12 - Stable with latest brcmpatch kext
+- Monterrey 12.6
 
 The config i'm using :
 
