@@ -1,0 +1,50 @@
+name: Update Hackintosh README
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Exécution automatique tous les dimanches
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Requis pour pousser les modifications
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Latest OpenCore/Kexts Versions
+        id: fetch_versions
+        run: |
+          # Récupérer la dernière release d'OpenCore via l'API GitHub
+          OC_VER=$(curl -s https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          LILU_VER=$(curl -s https://api.github.com/repos/acidanthera/Lilu/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          WEG_VER=$(curl -s https://api.github.com/repos/acidanthera/WhateverGreen/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          ALC_VER=$(curl -s https://api.github.com/repos/acidanthera/AppleALC/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          
+          # Exporter pour les étapes suivantes
+          echo "OC_VER=$OC_VER" >> $GITHUB_ENV
+          echo "LILU_VER=$LILU_VER" >> $GITHUB_ENV
+          echo "WEG_VER=$WEG_VER" >> $GITHUB_ENV
+          echo "ALC_VER=$ALC_VER" >> $GITHUB_ENV
+
+      - name: Generate README from template
+        run: |
+          sed -e "s/{{OC_VERSION}}/$OC_VER/g" \
+              -e "s/{{LILU_VERSION}}/$LILU_VER/g" \
+              -e "s/{{WEG_VERSION}}/$WEG_VER/g" \
+              -e "s/{{ALC_VERSION}}/$ALC_VER/g" \
+              README.template.md > README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # Ne commit que s'il y a des changements
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: Update OpenCore and Kext versions" && git push)
