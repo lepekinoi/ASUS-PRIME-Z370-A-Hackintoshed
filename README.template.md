@@ -8,7 +8,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 - **WhateverGreen:** {{WEG_VERSION}}
 - **AppleALC:** {{ALC_VERSION}}
 
-***
+---
 
 ## 💻 Hardware Configuration
 
@@ -28,7 +28,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 
 > ⚠️ With `iMacPro1,1`, the CPU will appear as **Intel Xeon** in "About This Mac" — this is expected and does not affect performance.
 
-***
+---
 
 ## ⚙️ BIOS Settings (Crucial for Coffee Lake)
 
@@ -82,7 +82,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 - **DVMT Pre-Allocated: 64 MB** — Minimum recommended (leave at 64 MB even with iGPU disabled).
 - **OS Type: Windows 8.1/10 UEFI Mode** — Required for UEFI Secure Boot screen to remain compatible.
 
-***
+---
 
 ## 🧩 OpenCore Kernel Quirks (config.plist)
 
@@ -95,7 +95,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 | `ResizeAppleGpuBars` | `0` | Required with Above 4G Decoding enabled |
 | `ProvideCurrentCpuInfo` | `YES` | Coffee Lake CPU power management |
 
-***
+---
 
 ## 🗂️ Required SSDTs (Coffee Lake Desktop)
 
@@ -106,7 +106,50 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 | `SSDT-AWAC` | RTC clock fix for Z370 (replaces AWAC with RTC) |
 | `SSDT-PMC` | Power Management Controller — required for Z370 chipset |
 
-***
+---
+
+---
+
+## ⚡ ASPM — PCIe Power Management (Advanced → Platform Misc Configuration)
+
+> These settings cover the **Platform Misc Configuration** and **PCH / SA PCI Express** sections of the ASUS Z370-A BIOS. ASPM (Active State Power Management) reduces power consumption on idle PCIe links.
+
+### Recommended Settings for Hackintosh Desktop (iMacPro1,1 + Vega 64)
+
+| Setting | Value | Priority | Reason |
+|---|---|---|---|
+| **PCI Express Native Power Management** | `Disabled` | 🔴 Important | Let BIOS manage ASPM — macOS has no full native control on Z370. Enabling can cause kernel panics or wake failures. |
+| **Native ASPM** | `Disabled` | 🔴 Important | Only useful under Windows Vista+. Under macOS, BIOS-managed ASPM is more stable. |
+| **DMI Link ASPM Control** (PCH PCIe) | `Disabled` | 🔴 Important | The DMI link (CPU to PCH) is critical — any interruption can cause freezes or black screens. |
+| **ASPM** (PCH PCI Express) | `Disabled` | 🟠 Recommended | Disable globally for stability. Can be re-enabled per-device via DeviceProperties if needed. |
+| **L1 Substates** (PCH PCI Express) | `Disabled` | 🟠 Recommended | L1 sub-states (L1.1 / L1.2) can cause latency spikes or spurious wake events on Hackintosh. |
+| **ASPM Control** (SA PCIe) | `Disabled` | 🟠 Recommended | System Agent ASPM is irrelevant with iGPU disabled (iMacPro1,1) and a potential source of conflicts. |
+| **PEG ASPM** (SA PCIe) | `Disabled` | 🔴 Important | PEG slot = PCIe x16 for the Vega 64. Enabling ASPM on this link can cause GPU stutters or black screen on wake. |
+
+### ASPM Power States Reference
+
+| State | Description |
+|---|---|
+| `L0` | Active — all PCIe transactions running, no power savings |
+| `L0s` | Light standby — fast entry/exit, minimal savings |
+| `L1` | Deep standby — significant savings, higher wake latency |
+| `L1.1 / L1.2` | L1 sub-states — maximum savings, incompatible with some Hackintosh hardware |
+
+### Optional: Per-Device ASPM via DeviceProperties (NVMe Temperature)
+
+If your NVMe SSD (WD SN850X) runs hot at idle, you can enable ASPM **only for that device** via `config.plist` DeviceProperties — without touching global BIOS settings:
+
+```xml
+<!-- Replace PciRoot path with your NVMe path (check with Hackintool -> PCIe tab) -->
+<key>PciRoot(0x0)/Pci(0x1D,0x0)/Pci(0x0,0x0)</key>
+<dict>
+    <key>pci-aspm-default</key>
+    <data>02010000</data>
+</dict>
+```
+
+> Use **Hackintool -> PCIe tab** to get the exact PciRoot path of your NVMe and verify its current ASPM state with:
+> `ioreg -l -p IODeviceTree | grep pci-aspm-default`
 
 ## 🛠️ OpenCore Installation & Update Guide
 
@@ -139,7 +182,7 @@ To update your EFI without breaking your system, follow the [Dortania Update Gui
 - [ ] SMBIOS `iMacPro1,1` generated with GenSMBIOS (unique values per machine)
 - [ ] Audio Layout-id = `7` (ALC1220S)
 
-***
+---
 
 ## 📚 Credits
 - [Dortania OpenCore Install Guide](https://dortania.github.io/OpenCore-Install-Guide/)
