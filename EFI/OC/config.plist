@@ -152,6 +152,8 @@
 				<string>Non-Volatile memory controller</string>
 				<key>model</key>
 				<string>NVMe SSD Controller SM981/PM981/PM983</string>
+				<key>pci-aspm-default</key>
+				<data>02010000</data>
 			</dict>
 			<key>PciRoot(0x0)/Pci(0x1F,0x3)</key>
 			<dict>
@@ -646,7 +648,7 @@
 			<key>PowerTimeoutKernelPanic</key>
 			<false/>
 			<key>ProvideCurrentCpuInfo</key>
-			<false/>
+			<true/>
 			<key>SetApfsTrimTimeout</key>
 			<integer>-1</integer>
 			<key>ThirdPartyDrives</key>
