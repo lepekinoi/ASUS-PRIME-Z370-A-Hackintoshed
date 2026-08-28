@@ -412,7 +412,7 @@
 				<key>Arch</key>
 				<string>x86_64</string>
 				<key>BundlePath</key>
-				<string>UTBDefault.kext</string>
+				<string>UTBMap.kext</string>
 				<key>Comment</key>
 				<string></string>
 				<key>Enabled</key>
