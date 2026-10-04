@@ -3,10 +3,10 @@
 A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **Intel i7-9700**, **Gigabyte Vega 64**, **ALC1220S audio**, and full Bluetooth support. 🚀
 
 ## 📦 Current EFI Versions (Auto-Updated)
-- **OpenCore:** 1.0.7
+- **OpenCore:** 1.0.8
 - **Lilu:** 1.7.2
-- **WhateverGreen:** 1.7.0
-- **AppleALC:** 1.9.7
+- **WhateverGreen:** 1.7.1
+- **AppleALC:** 1.9.8
 
 ---
 
