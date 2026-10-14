@@ -63,7 +63,7 @@ This EFI uses **`MacPro7,1`** with `PlatformInfo → Automatic = YES` (only the 
 - **Secure Boot** — Incompatible with OpenCore; must be off.
 - **CSM (Compatibility Support Module)** — Must be OFF for pure UEFI mode; active CSM causes `gIO` errors at OpenCore boot.
 - **CFG Lock (MSR 0xE2)** ⚠️ **CRITICAL** — macOS cannot boot with this locked. If not visible in BIOS, enable `AppleCpuPmCfgLock` + `AppleXcpmCfgLock` in `config.plist → Kernel → Quirks`.
-- **VT-d** — Can disrupt macOS IOMMU. Alternative: set `DisableIoMapper=YES` in `config.plist → Kernel → Quirks`.
+- **VT-d** — Can disrupt macOS IOMMU. It is disabled in BIOS here, so `DisableIoMapper` stays `NO`; set it to `YES` only if you keep VT-d enabled.
 - **Intel SGX** — Unused, may cause instability.
 - **Intel Platform Trust (PTT/TPM)** — Not needed under macOS.
 - **Serial / COM Port** — Can conflict with ACPI SSDTs.
@@ -87,25 +87,29 @@ This EFI uses **`MacPro7,1`** with `PlatformInfo → Automatic = YES` (only the 
 
 ## 🧩 OpenCore Kernel Quirks (config.plist)
 
+Values below are the ones actually set in this repository's `config.plist`.
+
 | Quirk | Value | Notes |
 |---|---|---|
-| `AppleCpuPmCfgLock` | `YES` | Set to `NO` if CFG Lock is disabled in BIOS |
-| `AppleXcpmCfgLock` | `YES` | Set to `NO` if CFG Lock is disabled in BIOS |
-| `DisableIoMapper` | `YES` | Required if VT-d is not disabled in BIOS |
+| `AppleCpuPmCfgLock` | `NO` | Legacy (non-XCPM) path, not used on Coffee Lake; CFG Lock is unlocked in BIOS |
+| `AppleXcpmCfgLock` | `YES` | Kept on purpose as a safety net for XCPM if MSR 0xE2 ever ends up locked |
+| `DisableIoMapper` | `NO` | VT-d is disabled in BIOS, so the IOMMU workaround is not needed |
 | `XhciPortLimit` | `NO` | Only for macOS ≤ 11 (Big Sur); USB ports are mapped with USBToolBox (`UTBMap.kext`) |
-| `ResizeAppleGpuBars` | `0` | Required with Above 4G Decoding enabled |
+| `ResizeAppleGpuBars` (Booter) | `0` | Required with Above 4G Decoding enabled |
 | `ProvideCurrentCpuInfo` | `YES` | Coffee Lake CPU power management |
 
 ---
 
 ## 🗂️ Required SSDTs (Coffee Lake Desktop)
 
-| SSDT | Role |
-|---|---|
-| `SSDT-PLUG` | CPU Power Management (P-States & C-States) |
-| `SSDT-EC-USBX` | Embedded Controller + USB power |
-| `SSDT-AWAC` | RTC clock fix for Z370 (replaces AWAC with RTC) |
-| `SSDT-PMC` | Power Management Controller — required for Z370 chipset |
+State below matches `ACPI → Add` in this repository's `config.plist`.
+
+| SSDT | State | Role |
+|---|---|---|
+| `SSDT-PLUG-DRTNIA` | ✅ Enabled | CPU Power Management (P-States & C-States) |
+| `SSDT-EC-USBX-DESKTOP` | ✅ Enabled | Embedded Controller + USB power |
+| `SSDT-AWAC` | ✅ Enabled | RTC clock fix for Z370 (replaces AWAC with RTC) |
+| `SSDT-PMC` | ❌ Disabled | Alternative to `SSDT-AWAC` for the Z370 PMC; the two are mutually exclusive. Untested here, enable only if `SSDT-AWAC` fails |
 
 ---
 
