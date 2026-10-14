@@ -1,0 +1,6 @@
+tools/bin/
+*.zip
+EFI-backup*/
+.DS_Store
+Thumbs.db
+.claude/settings.local.json
