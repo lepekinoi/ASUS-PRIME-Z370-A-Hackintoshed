@@ -19,3 +19,4 @@ ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVM
 - Ne jamais committer de valeurs PlatformInfo réelles (SystemSerialNumber, MLB, SystemUUID, ROM) : repo public.
 - Les vraies valeurs PlatformInfo vivent uniquement dans `tools/bin/platforminfo.local.json`, injectées au déploiement (`tools/inject_platforminfo.py`).
 - Un changement = une branche + un commit explicite. Jamais de push --force, jamais de commit sans que je le demande.
+- Jamais `git add -A` ni `git add .` : toujours lister les fichiers explicitement, puis vérifier `git diff --cached --stat` avant commit.
