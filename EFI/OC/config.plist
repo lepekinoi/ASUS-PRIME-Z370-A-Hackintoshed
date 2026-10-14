@@ -360,24 +360,6 @@
 				<key>Arch</key>
 				<string>x86_64</string>
 				<key>BundlePath</key>
-				<string>AMFIPass.kext</string>
-				<key>Comment</key>
-				<string></string>
-				<key>Enabled</key>
-				<true/>
-				<key>ExecutablePath</key>
-				<string>Contents/MacOS/AMFIPass</string>
-				<key>MaxKernel</key>
-				<string></string>
-				<key>MinKernel</key>
-				<string></string>
-				<key>PlistPath</key>
-				<string>Contents/Info.plist</string>
-			</dict>
-			<dict>
-				<key>Arch</key>
-				<string>x86_64</string>
-				<key>BundlePath</key>
 				<string>SMCProcessor.kext</string>
 				<key>Comment</key>
 				<string>SMCProcessor.kext</string>
@@ -479,7 +461,7 @@
 			<key>ThirdPartyDrives</key>
 			<false/>
 			<key>XhciPortLimit</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Scheme</key>
 		<dict>
@@ -578,7 +560,7 @@
 			<key>ScanPolicy</key>
 			<integer>0</integer>
 			<key>SecureBootModel</key>
-			<string>Disabled</string>
+			<string>Default</string>
 			<key>Vault</key>
 			<string>Optional</string>
 		</dict>
@@ -978,10 +960,10 @@
 				Rg==
 				</data>
 				<key>boot-args</key>
-				<string>-amfipassbeta -alcbeta  agdpmod=ignore keepsyms=1 revpatch=sbvmm alcid=7</string>
+				<string>-alcbeta agdpmod=ignore keepsyms=1 revpatch=sbvmm alcid=7</string>
 				<key>csr-active-config</key>
 				<data>
-				AwgAAA==
+				AAAAAA==
 				</data>
 				<key>prev-lang:kbd</key>
 				<string>fr:60</string>
