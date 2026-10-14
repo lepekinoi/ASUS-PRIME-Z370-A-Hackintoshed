@@ -21,12 +21,7 @@ sys.exit(1 if len(on) > 1 else 0)
 $py | python - $cfg
 if ($LASTEXITCODE -ne 0) { throw "SSDT-AWAC et SSDT-PMC actives simultanement" }
 
-Write-Host "== PlatformInfo (fuite de serial) ==" -ForegroundColor Cyan
-$raw = Get-Content $cfg -Raw
-foreach ($k in 'SystemSerialNumber','MLB','SystemUUID') {
-  if ($raw -match "<key>$k</key>\s*<string>([^<]+)</string>") {
-    $v = $Matches[1]
-    if ($v -notmatch '^(0+|X+|[-0]+|placeholder)$') { Write-Warning "$k renseigne ($($v.Substring(0,[Math]::Min(4,$v.Length)))...) : ne pas committer en public" }
-  }
-}
+Write-Host "== PlatformInfo (placeholders uniquement) ==" -ForegroundColor Cyan
+python "$PSScriptRoot\inject_platforminfo.py" check
+if ($LASTEXITCODE -ne 0) { throw "Valeur PlatformInfo reelle dans le depot : interdit (repo public). Lancer : python tools/inject_platforminfo.py sanitize" }
 Write-Host "OK" -ForegroundColor Green

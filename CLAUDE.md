@@ -17,4 +17,5 @@ ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVM
 - Après toute modif d'EFI : `powershell -ExecutionPolicy Bypass -File tools/validate.ps1` doit passer.
 - Ajout/suppression de kext ou SSDT : mettre à jour Kernel/Add ou ACPI/Add (Lilu en premier, puis ses plugins).
 - Ne jamais committer de valeurs PlatformInfo réelles (SystemSerialNumber, MLB, SystemUUID, ROM) : repo public.
+- Les vraies valeurs PlatformInfo vivent uniquement dans `tools/bin/platforminfo.local.json`, injectées au déploiement (`tools/inject_platforminfo.py`).
 - Un changement = une branche + un commit explicite. Jamais de push --force, jamais de commit sans que je le demande.
