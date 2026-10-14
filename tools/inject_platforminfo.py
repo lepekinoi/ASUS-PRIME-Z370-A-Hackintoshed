@@ -3,6 +3,7 @@
 
 Les vraies valeurs vivent dans tools/bin/platforminfo.local.json (gitignore).
 Le config.plist du depot ne contient que des placeholders.
+PlatformInfo/Automatic=true : seules les 4 cles de Generic sont gerees.
 
   inject <staging>  copie EFI/ dans <staging>/EFI et y injecte les vraies valeurs
   check             echoue si une valeur reelle est presente dans le depot
@@ -25,22 +26,10 @@ KEYS = [
     "PlatformInfo/Generic/MLB",
     "PlatformInfo/Generic/SystemUUID",
     "PlatformInfo/Generic/ROM",
-    "PlatformInfo/SMBIOS/SystemSerialNumber",
-    "PlatformInfo/SMBIOS/BoardSerialNumber",
-    "PlatformInfo/SMBIOS/ChassisSerialNumber",
-    "PlatformInfo/SMBIOS/SystemUUID",
-    "PlatformInfo/DataHub/SystemSerialNumber",
-    "PlatformInfo/DataHub/SystemUUID",
-    "PlatformInfo/PlatformNVRAM/SystemSerialNumber",
-    "PlatformInfo/PlatformNVRAM/MLB",
-    "PlatformInfo/PlatformNVRAM/SystemUUID",
-    "PlatformInfo/PlatformNVRAM/ROM",
 ]
 
 PLACEHOLDERS = {
     "SystemSerialNumber": "X" * 12,
-    "BoardSerialNumber": "X" * 12,
-    "ChassisSerialNumber": "X" * 12,
     "MLB": "X" * 17,
     "SystemUUID": "00000000-0000-0000-0000-000000000000",
     "ROM": bytes(6),
