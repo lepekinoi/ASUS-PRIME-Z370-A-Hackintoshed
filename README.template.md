@@ -1,6 +1,6 @@
 # 🍏 ASUS PRIME Z370-A Hackintosh (OpenCore)
 
-A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **Intel i7-9700**, **Gigabyte Vega 64**, **ALC1220S audio**, and full Bluetooth support. 🚀
+A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **Intel i7-9700**, **Gigabyte Vega 64**, and **ALC1220S audio**. No Wi-Fi/Bluetooth card. 🚀
 
 ## 📦 Current EFI Versions (Auto-Updated)
 - **OpenCore:** {{OC_VERSION}}
@@ -19,14 +19,15 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 | **GPU** | Gigabyte RX Vega 64 8GB | Native support (OOB) |
 | **Audio** | Realtek ALC1220S | `layout-id=7` |
 | **Storage** | WD Black SN850X NVMe | Fully compatible |
-| **Bluetooth** | Intel / Broadcom | Fully working (requires `-ibtcompatbeta` boot-arg on Tahoe) |
+| **Wi-Fi / Bluetooth** | None | No wireless card installed; this EFI ships no Wi-Fi/BT kexts |
 
-## 🎭 SMBIOS Selection
+## 🎭 SMBIOS: `MacPro7,1`
 
-- 🖥️ **`iMacPro1,1` (Recommended):** Best for a dGPU-only build (Vega 64). Ensure the iGPU is **disabled** in the BIOS. Enables native DRM (Apple TV+, Netflix in Safari, Prime Video).
-- 🖥️ **`iMac19,1`:** Use this if you need to keep the iGPU enabled for compute tasks.
+This EFI uses **`MacPro7,1`** with `PlatformInfo → Automatic = YES` (only the `Generic` section is filled). It is a dGPU-only model: the iGPU **must be disabled** in the BIOS, and the Vega 64 gets full acceleration plus native DRM (Apple TV+, Netflix in Safari, Prime Video).
 
-> ⚠️ With `iMacPro1,1`, the CPU will appear as **Intel Xeon** in "About This Mac" — this is expected and does not affect performance.
+- `MacPro7,1` is not in the Coffee Lake support list, so OTA updates are kept working with **RestrictEvents.kext** + the `revpatch=sbvmm` boot-arg. Do not remove either.
+- The CPU shows as **Intel Xeon** in "About This Mac" — expected, no performance impact.
+- The committed `config.plist` only contains placeholder serials (`XXXX…`, zero UUID/ROM). Generate your own with GenSMBIOS and keep them out of any public repo (see `tools/inject_platforminfo.py`).
 
 ---
 
@@ -66,7 +67,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 - **Intel SGX** — Unused, may cause instability.
 - **Intel Platform Trust (PTT/TPM)** — Not needed under macOS.
 - **Serial / COM Port** — Can conflict with ACPI SSDTs.
-- **iGPU (Intel UHD 630)** ⚠️ **REQUIRED with iMacPro1,1** — The `iMacPro1,1` SMBIOS has no iGPU in the Apple model. Leaving it enabled will cause kernel panics. The Vega 64 handles all rendering.
+- **iGPU (Intel UHD 630)** ⚠️ **REQUIRED with MacPro7,1** — The `MacPro7,1` SMBIOS has no iGPU in the Apple model. Leaving it enabled will cause kernel panics. The Vega 64 handles all rendering.
 
 ### ✅ Enable — Details
 
@@ -91,7 +92,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 | `AppleCpuPmCfgLock` | `YES` | Set to `NO` if CFG Lock is disabled in BIOS |
 | `AppleXcpmCfgLock` | `YES` | Set to `NO` if CFG Lock is disabled in BIOS |
 | `DisableIoMapper` | `YES` | Required if VT-d is not disabled in BIOS |
-| `XhciPortLimit` | `YES` | Only for macOS ≤ 11 (Big Sur); disable on Monterey+ |
+| `XhciPortLimit` | `NO` | Only for macOS ≤ 11 (Big Sur); USB ports are mapped with USBToolBox (`UTBMap.kext`) |
 | `ResizeAppleGpuBars` | `0` | Required with Above 4G Decoding enabled |
 | `ProvideCurrentCpuInfo` | `YES` | Coffee Lake CPU power management |
 
@@ -114,7 +115,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 
 > These settings cover the **Platform Misc Configuration** and **PCH / SA PCI Express** sections of the ASUS Z370-A BIOS. ASPM (Active State Power Management) reduces power consumption on idle PCIe links.
 
-### Recommended Settings for Hackintosh Desktop (iMacPro1,1 + Vega 64)
+### Recommended Settings for Hackintosh Desktop (MacPro7,1 + Vega 64)
 
 | Setting | Value | Priority | Reason |
 |---|---|---|---|
@@ -123,7 +124,7 @@ A fully working OpenCore build for the **ASUS PRIME Z370-A** paired with an **In
 | **DMI Link ASPM Control** (PCH PCIe) | `Disabled` | 🔴 Important | The DMI link (CPU to PCH) is critical — any interruption can cause freezes or black screens. |
 | **ASPM** (PCH PCI Express) | `Disabled` | 🟠 Recommended | Disable globally for stability. Can be re-enabled per-device via DeviceProperties if needed. |
 | **L1 Substates** (PCH PCI Express) | `Disabled` | 🟠 Recommended | L1 sub-states (L1.1 / L1.2) can cause latency spikes or spurious wake events on Hackintosh. |
-| **ASPM Control** (SA PCIe) | `Disabled` | 🟠 Recommended | System Agent ASPM is irrelevant with iGPU disabled (iMacPro1,1) and a potential source of conflicts. |
+| **ASPM Control** (SA PCIe) | `Disabled` | 🟠 Recommended | System Agent ASPM is irrelevant with iGPU disabled (MacPro7,1) and a potential source of conflicts. |
 | **PEG ASPM** (SA PCIe) | `Disabled` | 🔴 Important | PEG slot = PCIe x16 for the Vega 64. Enabling ASPM on this link can cause GPU stutters or black screen on wake. |
 
 ### ASPM Power States Reference
@@ -179,7 +180,7 @@ To update your EFI without breaking your system, follow the [Dortania Update Gui
 - [ ] SATA in AHCI mode
 - [ ] XHCI/EHCI Hand-off enabled
 - [ ] Secure Boot + CSM disabled
-- [ ] SMBIOS `iMacPro1,1` generated with GenSMBIOS (unique values per machine)
+- [ ] SMBIOS `MacPro7,1` serials generated with GenSMBIOS (unique values per machine, never committed)
 - [ ] Audio Layout-id = `7` (ALC1220S)
 
 ---
