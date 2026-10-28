@@ -1,7 +1,8 @@
 ﻿#Requires -RunAsAdministrator
 param(
   [Parameter(Mandatory)][ValidatePattern('^[A-Za-z]$')][string]$Drive,
-  [switch]$AllowNonUsb
+  [switch]$AllowNonUsb,
+  [switch]$DebugBoot
 )
 $ErrorActionPreference = 'Stop'
 $ocv = Join-Path $PSScriptRoot 'bin\ocvalidate.exe'
@@ -22,6 +23,13 @@ try {
   Write-Host "== Injection PlatformInfo -> $staging ==" -ForegroundColor Cyan
   python "$PSScriptRoot\inject_platforminfo.py" inject $staging
   if ($LASTEXITCODE -ne 0) { throw "Injection PlatformInfo KO (code $LASTEXITCODE)" }
+
+  # 2b. Option -DebugBoot : verbose + logs OpenCore, applique au staging uniquement
+  if ($DebugBoot) {
+    Write-Host "== Overlay debug (verbose + logs) ==" -ForegroundColor Cyan
+    python "$PSScriptRoot\debug_overlay.py" (Join-Path $staging 'EFI\OC\config.plist')
+    if ($LASTEXITCODE -ne 0) { throw "Overlay debug KO (code $LASTEXITCODE)" }
+  }
 
   Write-Host "== ocvalidate (config injecte) ==" -ForegroundColor Cyan
   & $ocv (Join-Path $staging 'EFI\OC\config.plist')
