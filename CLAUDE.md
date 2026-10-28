@@ -5,7 +5,7 @@ ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVM
 
 ## Source de vérité
 - `EFI/OC/config.plist` fait foi. Le README peut être en retard.
-- README.md est généré par `.github/workflows` depuis `README.template.md` : modifier le template, jamais README.md directement. Vérifier le workflow avant de toucher à l'un ou l'autre.
+- README.md est généré depuis `README.template.md` et l'EFI par `tools/render_readme.py` (en local ou par `.github/workflows`) : modifier le template, jamais README.md directement. Après une modif d'EFI ou du template, relancer `python3 tools/render_readme.py`.
 
 ## Choix volontaires — NE PAS "corriger"
 - SMBIOS MacPro7,1 + `revpatch=sbvmm` + RestrictEvents.kext : stratégie voulue (accélération Vega 64 + OTA).
