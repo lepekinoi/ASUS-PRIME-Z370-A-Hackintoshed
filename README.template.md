@@ -28,6 +28,8 @@ This EFI uses **`MacPro7,1`** with `PlatformInfo → Automatic = YES` (only the 
 - `MacPro7,1` is not in the Coffee Lake support list, so OTA updates are kept working with **RestrictEvents.kext** + the `revpatch=sbvmm` boot-arg. Do not remove either.
 - The CPU shows as **Intel Xeon** in "About This Mac" — expected, no performance impact.
 - The committed `config.plist` only contains placeholder serials (`XXXX…`, zero UUID/ROM). Generate your own with GenSMBIOS and keep them out of any public repo (see `tools/inject_platforminfo.py`).
+- **macOS Tahoe:** `Misc → Security → SecureBootModel` is set to `Disabled`, as Dortania requires for macOS 14.4 to 26.x. With `Default`, the installer loops at the end of its second phase and OTA updates fail.
+- **macOS Tahoe:** `WhateverGreen.kext` is disabled. Dortania reports AMD connector patching issues on macOS 26, and the Vega 64 works natively with `MacPro7,1`.
 
 ---
 
@@ -95,7 +97,7 @@ Values below are the ones actually set in this repository's `config.plist`.
 | `AppleXcpmCfgLock` | `YES` | Kept on purpose as a safety net for XCPM if MSR 0xE2 ever ends up locked |
 | `DisableIoMapper` | `NO` | VT-d is disabled in BIOS, so the IOMMU workaround is not needed |
 | `XhciPortLimit` | `NO` | Only for macOS ≤ 11 (Big Sur); USB ports are mapped with USBToolBox (`UTBMap.kext`) |
-| `ResizeAppleGpuBars` (Booter) | `0` | Required with Above 4G Decoding enabled |
+| `ResizeAppleGpuBars` (Booter) | `-1` | Re-Size BAR is disabled in BIOS; the Vega 64 has no ReBAR support |
 | `ProvideCurrentCpuInfo` | `YES` | Coffee Lake CPU power management |
 
 ---
@@ -149,10 +151,12 @@ If your NVMe SSD (WD SN850X) runs hot at idle, you can enable ASPM **only for th
 <key>PciRoot(0x0)/Pci(0x1D,0x0)/Pci(0x0,0x0)</key>
 <dict>
     <key>pci-aspm-default</key>
-    <data>02010000</data>
+    <data>AgEAAA==</data>
 </dict>
 ```
 
+> ⚠️ In raw XML, `<data>` is **base64**: `AgEAAA==` is the bytes `02 01 00 00`. ProperTree displays the same value as hex `02010000`. Typing the hex string into raw XML injects wrong bytes.
+>
 > Use **Hackintool -> PCIe tab** to get the exact PciRoot path of your NVMe and verify its current ASPM state with:
 > `ioreg -l -p IODeviceTree | grep pci-aspm-default`
 
