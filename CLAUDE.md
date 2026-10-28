@@ -1,7 +1,7 @@
 # Hackintosh ASUS PRIME Z370-A — règles projet
 
 ## Matériel
-ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVMe · macOS Tahoe 26 · OpenCore 1.0.7
+ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVMe · macOS Tahoe 26 · OpenCore 1.0.8
 
 ## Source de vérité
 - `EFI/OC/config.plist` fait foi. Le README peut être en retard.
