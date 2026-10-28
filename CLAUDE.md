@@ -11,6 +11,7 @@ ASUS PRIME Z370-A · i7-9700 · Gigabyte RX Vega 64 · ALC1220S (alcid=7) · NVM
 - SMBIOS MacPro7,1 + `revpatch=sbvmm` + RestrictEvents.kext : stratégie voulue (accélération Vega 64 + OTA).
 - Quirks : AppleXcpmCfgLock=true / AppleCpuPmCfgLock=false.
 - SSDT-AWAC et SSDT-PMC sont mutuellement exclusifs : un seul Enabled=true à la fois.
+- SecureBootModel=Disabled : requis par Dortania pour Tahoe (14.4–26.x) avec MacPro7,1 + `revpatch=sbvmm`. Avec Default, l'install boucle en fin de 2e phase.
 
 ## Règles d'édition
 - Éditer les plist via Python `plistlib` (load/dump, sort_keys=False), jamais par regex/sed.
