@@ -4,13 +4,10 @@
 # hors depot, overlay debug optionnel, ocvalidate du config injecte, backup, copie.
 set -euo pipefail
 TOOLS="$(cd "$(dirname "$0")" && pwd)"
-REPO="$(cd "$TOOLS/.." && pwd)"
 
 DEBUG_BOOT=0
 if [ "${1:-}" = "--debug-boot" ]; then DEBUG_BOOT=1; shift; fi
 DISK="${1:?usage: sync-esp.sh [--debug-boot] diskXsY}"
-
-git -C "$REPO" pull --ff-only
 
 # 1. Le depot doit etre valide et sans valeur PlatformInfo reelle
 "$TOOLS/validate.sh"
