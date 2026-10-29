@@ -55,7 +55,7 @@
 | **iGPU** | Intel UHD 630, **disabled** in BIOS |
 | **Audio** | Realtek ALC1220S |
 | **Ethernet** | Intel I219-V |
-| **Storage** | Toshiba THNSNJ512 512 GB SATA SSD |
+| **Storage** | WD_BLACK SN850X 1 TB NVMe (PCIe 4.0 drive, runs at PCIe 3.0 x4 on Z370) |
 | **Wireless** | None |
 
 ---
@@ -132,8 +132,6 @@ Recommended: leave ASPM to the firmware and disable it on critical links.
 | Argument | Purpose |
 |---|---|
 | `revpatch=sbvmm` | With `RestrictEvents`, lets macOS offer updates to an unsupported Mac model |
-| `alcid=7` | AppleALC layout for the ALC1220S |
-| `-alcbeta` | Allows AppleALC on a macOS version it does not officially support yet |
 | `keepsyms=1` | Readable kernel panic logs |
 
 ---
@@ -187,18 +185,19 @@ These choices are deliberate. Please don't "fix" them without reading why.
 
 | Choice | Why |
 |---|---|
-| **SMBIOS `MacPro7,1`** | dGPU-only model: full Vega 64 acceleration and hardware DRM. The CPU shows as *Xeon* in About This Mac, which is cosmetic. |
+| **SMBIOS `MacPro7,1`** | dGPU-only model: full Vega 64 acceleration and hardware DRM. About This Mac shows a *Mac Pro (2019)* with the real Core i7. |
 | **`RestrictEvents` + `revpatch=sbvmm`** | `MacPro7,1` is not a Coffee Lake model; this pair keeps software updates available. Remove either and OTA stops. |
 | **`SecureBootModel = Disabled`** | Required by Dortania for macOS 14.4 to 26.x with this setup. With `Default`, the Tahoe installer loops at the end of its second phase. |
-| **WhateverGreen disabled** | AMD connector patching is broken on macOS 26, and the Vega 64 works natively with `MacPro7,1`. |
+| **No WhateverGreen** | AMD connector patching is broken on macOS 26, and the Vega 64 works natively with `MacPro7,1`. |
 | **`AppleXcpmCfgLock = YES`** | CFG Lock is unlocked in BIOS; the quirk stays on as a safety net if a BIOS reset locks MSR `0xE2` again. `AppleCpuPmCfgLock` stays off (legacy path, unused on Coffee Lake). |
-| **`SSDT-AWAC` *or* `SSDT-PMC`** | Mutually exclusive. `SSDT-AWAC` is the one in use; `validate` fails if both are enabled. |
+| **`SSDT-AWAC`, no `SSDT-PMC`** | Z370 needs `SSDT-AWAC` for the RTC. `SSDT-PMC` only applies to true 300-series chipsets (Z390, B360…) and is not shipped; `validate` still fails if both are enabled. |
+| **Only loaded files ship** | Every driver, kext and resource in `EFI/` is referenced by `config.plist`. Unused OpenCore drivers, tools and the Syrah/Chardonnay themes are not included. |
 
 ---
 
 ## 🚧 Known limitations
 
-- **No onboard audio on Tahoe.** macOS 26 no longer ships `AppleHDA.kext`. AppleALC loads with layout `7`, but there is no Apple audio driver for it to patch. Use USB or HDMI/DisplayPort audio.
+- **No onboard audio on Tahoe.** macOS 26 no longer ships `AppleHDA.kext`, so AppleALC has nothing to patch and the EFI ships no audio kext. Use a USB audio interface or HDMI/DisplayPort audio.
 - **No Wi-Fi / Bluetooth.** No wireless card is installed and the EFI ships no wireless kexts.
 
 ---

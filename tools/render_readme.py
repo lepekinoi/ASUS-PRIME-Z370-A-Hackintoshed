@@ -17,12 +17,10 @@ README = ROOT / "README.md"
 
 KEXT_ROLES = {
     "Lilu.kext": "Patching engine, required by every plugin below",
-    "AppleALC.kext": "ALC1220S layout `7`, no effect on Tahoe without AppleHDA",
     "VirtualSMC.kext": "SMC emulation",
     "IntelMausi.kext": "Intel I219-V Ethernet",
-    "WhateverGreen.kext": "GPU patches, not needed for the Vega 64 on Tahoe",
     "RestrictEvents.kext": "Keeps OTA updates working with MacPro7,1 (`revpatch=sbvmm`)",
-    "NVMeFix.kext": "NVMe power management, optional (this build runs on SATA)",
+    "NVMeFix.kext": "NVMe power management (APST) for the WD_BLACK SN850X",
     "USBToolBox.kext": "USB mapping driver",
     "UTBMap.kext": "USB port map for this board",
     "SMCProcessor.kext": "CPU temperature sensors",
@@ -33,7 +31,6 @@ SSDT_ROLES = {
     "SSDT-PLUG-DRTNIA.aml": "CPU power management (`plugin-type`)",
     "SSDT-EC-USBX-DESKTOP.aml": "Fake Embedded Controller + USB power",
     "SSDT-AWAC.aml": "Brings back the legacy RTC clock on Z370",
-    "SSDT-PMC.aml": "Alternative to SSDT-AWAC, mutually exclusive",
 }
 
 
