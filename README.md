@@ -53,6 +53,7 @@
 |---|---|
 | **Motherboard** | ASUS PRIME Z370-A |
 | **CPU** | Intel Core i7-9700 (Coffee Lake Refresh, 8C/8T) |
+| **Memory** | 32 GB DDR4-2666 |
 | **GPU** | Gigabyte Radeon RX Vega 64 8 GB |
 | **iGPU** | Intel UHD 630, **disabled** in BIOS |
 | **Audio** | Realtek ALC1220S |
