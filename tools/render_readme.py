@@ -20,6 +20,8 @@ KEXT_ROLES = {
     "VirtualSMC.kext": "SMC emulation",
     "IntelMausi.kext": "Intel I219-V Ethernet",
     "RestrictEvents.kext": "Keeps OTA updates working with MacPro7,1 (`revpatch=sbvmm`)",
+    "AppleALC.kext": "Realtek ALC1220 onboard audio (`layout-id` 7)",
+    "SimpleHDA.kext": "Restores Apple's AppleHDA on Tahoe so AppleALC works again",
     "NVMeFix.kext": "NVMe power management (APST) for the WD_BLACK SN850X",
     "USBToolBox.kext": "USB mapping driver",
     "UTBMap.kext": "USB port map for this build (3 controllers, see [USB map](#usb-map))",

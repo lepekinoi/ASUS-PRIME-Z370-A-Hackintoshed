@@ -42,7 +42,7 @@
 | **CPU** power management | ✅ | XCPM via `SSDT-PLUG` |
 | **Sensors** (CPU temp, fans) | ✅ | VirtualSMC plugins |
 | **OTA updates** | ⚙️ | Kept possible with `RestrictEvents` + `revpatch=sbvmm` |
-| **Onboard audio** (ALC1220S) | ❌ | macOS Tahoe removed AppleHDA, see [Known limitations](#-known-limitations) |
+| **Onboard audio** (ALC1220S) | ✅ | `SimpleHDA` restores AppleHDA on Tahoe, `AppleALC` with `layout-id` 7 |
 | **Wi-Fi / Bluetooth** | ➖ | No wireless card in this build, on purpose (no Tahoe-compatible module) |
 
 ---
@@ -127,9 +127,11 @@ Recommended: leave ASPM to the firmware and disable it on critical links.
 | Kext | Version | State | Role |
 |---|---|---|---|
 | `Lilu.kext` | `1.7.2` | ✅ Enabled | Patching engine, required by every plugin below |
-| `VirtualSMC.kext` | `1.3.7` | ✅ Enabled | SMC emulation |
-| `SMCProcessor.kext` | `1.3.7` | ✅ Enabled | CPU temperature sensors |
-| `SMCSuperIO.kext` | `1.3.7` | ✅ Enabled | Fan speed sensors |
+| `VirtualSMC.kext` | `1.3.8` | ✅ Enabled | SMC emulation |
+| `SMCProcessor.kext` | `1.3.8` | ✅ Enabled | CPU temperature sensors |
+| `SMCSuperIO.kext` | `1.3.8` | ✅ Enabled | Fan speed sensors |
+| `AppleALC.kext` | `1.9.8` | ✅ Enabled | Realtek ALC1220 onboard audio (`layout-id` 7) |
+| `SimpleHDA.kext` | `1.0.0` | ✅ Enabled | Restores Apple's AppleHDA on Tahoe so AppleALC works again |
 | `RestrictEvents.kext` | `1.1.6` | ✅ Enabled | Keeps OTA updates working with MacPro7,1 (`revpatch=sbvmm`) |
 | `NVMeFix.kext` | `1.1.3` | ✅ Enabled | NVMe power management (APST) for the WD_BLACK SN850X |
 | `IntelMausi.kext` | `1.0.8` | ✅ Enabled | Intel I219-V Ethernet |
@@ -153,7 +155,9 @@ keepsyms=1 revpatch=sbvmm
 | Argument | Purpose |
 |---|---|
 | `revpatch=sbvmm` | With `RestrictEvents`, lets macOS offer updates to an unsupported Mac model |
-| `keepsyms=1` | Readable kernel panic logs |
+| `keepsyms=1` | Readable kernel panic logs; also required by `SimpleHDA` |
+
+The onboard audio `layout-id` (7) is set in `DeviceProperties` on `PciRoot(0x0)/Pci(0x1F,0x3)`, not with `alcid`.
 
 ### USB map
 
@@ -282,6 +286,7 @@ These choices are deliberate. Please don't "fix" them without reading why.
 | **No WhateverGreen** | AMD connector patching is broken on macOS 26, and the Vega 64 works natively with `MacPro7,1`. |
 | **`AppleXcpmCfgLock = YES`** | CFG Lock is unlocked in BIOS; the quirk stays on as a safety net if a BIOS reset locks MSR `0xE2` again. `AppleCpuPmCfgLock` stays off (legacy path, unused on Coffee Lake). |
 | **`SSDT-AWAC`, no `SSDT-PMC`** | Z370 needs `SSDT-AWAC` for the RTC. `SSDT-PMC` only applies to true 300-series chipsets (Z390, B360…) and is not shipped; `validate` still fails if both are enabled. |
+| **Audio through `SimpleHDA` + `AppleALC`** | macOS 26 no longer ships `AppleHDA.kext`. `SimpleHDA` injects Apple's original AppleHDA through OpenCore (no system volume patch, no root patch), so `AppleALC` works as before. Load order: `Lilu` → `AppleALC` → `SimpleHDA`. `SimpleHDA` is limited to Darwin 25 (`MinKernel` 25.0.0, `MaxKernel` 25.99.99). |
 | **Thunderbolt disabled in BIOS** | No Thunderbolt card is installed. The option would only reserve PCI resources and shift the ASMedia bus numbers used by the USB map. |
 | **No Wi-Fi / Bluetooth** | No module is supported on Tahoe at this time; the Bluetooth module was unplugged and its internal USB port is not mapped. |
 | **ASMedia USB matched by `pcidebug`** | Both ASMedia controllers share the ACPI name `PXSX`, so their PCI address is the only stable way to tell them apart. The PCIe card must stay in its slot. |
@@ -291,7 +296,6 @@ These choices are deliberate. Please don't "fix" them without reading why.
 
 ## 🚧 Known limitations
 
-- **No onboard audio on Tahoe.** macOS 26 no longer ships `AppleHDA.kext`, so AppleALC has nothing to patch and the EFI ships no audio kext. Use a USB audio interface or HDMI/DisplayPort audio.
 - **No Wi-Fi / Bluetooth.** No wireless card is installed and the EFI ships no wireless kexts.
 - **No Thunderbolt.** Adding a ThunderboltEX 3 card means re-enabling Thunderbolt in BIOS, adding Thunderbolt SSDTs, and updating the ASMedia `pcidebug` values of the [USB map](#usb-map).
 - **The PCIe USB-C card is tied to its slot** and needs its SATA power cable. Moving it breaks its USB map entry (ports still work, unnamed).
@@ -320,6 +324,12 @@ Deploy with `--debug-boot` / `-DebugBoot`. You get `-v debug=0x100`, OpenCore lo
 </details>
 
 <details>
+<summary><b>No sound from the onboard jacks</b></summary>
+
+Check *System Information → Audio*: the Realtek codec must be listed. Add `-shdaoff` to compare with `SimpleHDA` disabled, or use its `DEBUG` build with `-shdadbg` for logs. The optional `SimpleHDA-HAL` package (from the [SimpleHDA release](https://github.com/laobamac/SimpleHDA/releases)) adds AppleHDA-specific CoreAudio controls and is detected automatically. Remove any other AppleHDA restore method or root patch first.
+</details>
+
+<details>
 <summary><b>USB-C or PCIe card ports have no name / wrong type in macOS</b></summary>
 
 The ASMedia `pcidebug` address no longer matches: Thunderbolt was re-enabled in BIOS or the card moved. Compare `ioreg -l -w0 | grep '"pcidebug"'` with `UTBMap.kext` and update the value (see [USB map](#usb-map)).
@@ -343,6 +353,7 @@ Your `ocvalidate` and OpenCore versions differ. Use the binary from the same rel
 
 - [Acidanthera](https://github.com/acidanthera) for OpenCore, Lilu and its plugins
 - [Dortania](https://dortania.github.io/OpenCore-Install-Guide/) for the install guide
+- [laobamac](https://github.com/laobamac/SimpleHDA) for SimpleHDA
 - [USBToolBox](https://github.com/USBToolBox) for USB mapping
 - [CorpNewt](https://github.com/corpnewt) for GenSMBIOS and ProperTree
 
