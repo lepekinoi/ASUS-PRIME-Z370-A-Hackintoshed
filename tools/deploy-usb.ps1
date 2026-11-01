@@ -24,6 +24,11 @@ try {
   python "$PSScriptRoot\inject_platforminfo.py" inject $staging
   if ($LASTEXITCODE -ne 0) { throw "Injection PlatformInfo KO (code $LASTEXITCODE)" }
 
+  # 2a. Branding local optionnel (tools/bin/branding/) : theme et cles config, staging uniquement
+  Write-Host "== Branding ==" -ForegroundColor Cyan
+  python "$PSScriptRoot\branding_overlay.py" $staging
+  if ($LASTEXITCODE -ne 0) { throw "Branding KO (code $LASTEXITCODE)" }
+
   # 2b. Option -DebugBoot : verbose + logs OpenCore, applique au staging uniquement
   if ($DebugBoot) {
     Write-Host "== Overlay debug (verbose + logs) ==" -ForegroundColor Cyan

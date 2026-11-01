@@ -18,6 +18,10 @@ trap 'rm -rf "$STAGING"' EXIT
 echo "== Injection PlatformInfo -> $STAGING =="
 python3 -I "$TOOLS/inject_platforminfo.py" inject "$STAGING"
 
+# 2a. Branding local optionnel (tools/bin/branding/) : theme et cles config, staging uniquement
+echo "== Branding =="
+python3 -I "$TOOLS/branding_overlay.py" "$STAGING"
+
 # 2b. Option --debug-boot : verbose + logs OpenCore, applique au staging uniquement
 if [ "$DEBUG_BOOT" = 1 ]; then
   echo "== Overlay debug (verbose + logs) =="

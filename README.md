@@ -159,6 +159,7 @@ flowchart LR
     A["EFI/ in the repo<br/><i>placeholders</i>"] --> B{"validate<br/>ocvalidate · AWAC/PMC · no real serials"}
     B -->|OK| C["Staging copy<br/><i>outside the repo</i>"]
     S[("tools/bin/<br/>platforminfo.local.json")] -.inject.-> C
+    T[("tools/bin/branding/<br/><i>optional theme</i>")] -.overlay.-> C
     C --> D["ocvalidate<br/>on injected config"]
     D --> E["Backup of current EFI"]
     E --> F[("ESP / USB key")]
@@ -181,6 +182,20 @@ python3 tools/inject_platforminfo.py sanitize # put the placeholders back before
 | **Windows** (admin) | USB key | `.\tools\deploy-usb.ps1 -Drive E` |
 
 Add `--debug-boot` (macOS) or `-DebugBoot` (Windows) for a verbose boot with OpenCore file logs. Both only change the deployed copy, never the repository.
+
+<details>
+<summary><b>Optional: custom boot picker theme</b></summary>
+
+A theme can be kept out of the public repository in the git-ignored `tools/bin/branding/` folder. Both deploy scripts apply it to the staging copy through `tools/branding_overlay.py`:
+
+| Path | Effect |
+|---|---|
+| `tools/bin/branding/EFI/` | Copied over the staged `EFI/`, e.g. `OC/Resources/Image/<Vendor>/<Theme>/` |
+| `tools/bin/branding/config.json` | `config.plist` keys to override, e.g. `{"Misc/Boot/PickerVariant": "Vendor\\Theme"}` |
+
+Unknown keys, wrong value types and a `PickerVariant` without its icons stop the deployment. Without the folder, the repository EFI ships unchanged.
+
+</details>
 
 ### 3. Validate before every commit
 
