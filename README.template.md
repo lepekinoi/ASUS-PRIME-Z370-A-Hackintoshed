@@ -141,6 +141,8 @@ Recommended: leave ASPM to the firmware and disable it on critical links.
 | `revpatch=sbvmm` | With `RestrictEvents`, lets macOS offer updates to an unsupported Mac model |
 | `keepsyms=1` | Readable kernel panic logs; also required by `SimpleHDA` |
 
+The shipped EFI boots quietly: no `-v`, and OpenCore logging is off (`Misc/Debug/Target` = 0). For a verbose boot with logs, deploy with `--debug-boot` / `-DebugBoot` (see [Troubleshooting](#-troubleshooting)).
+
 The onboard audio `layout-id` (7) is set in `DeviceProperties` on `PciRoot(0x0)/Pci(0x1F,0x3)`, not with `alcid`.
 
 ### USB map
@@ -209,14 +211,27 @@ python3 tools/inject_platforminfo.py sanitize # placeholders back in config.plis
 
 ### 2. Deploy
 
-| From | Target | Command |
-|---|---|---|
-| **macOS** | Internal ESP | `./tools/sync-esp.sh disk0s1` |
-| **Windows** (admin) | USB key | `.\tools\deploy-usb.ps1 -Drive E` |
+**Windows → USB key.** Open *Terminal (Admin)*: the script requires administrator rights.
+
+```powershell
+cd <path to the repository>
+Get-Volume | Where-Object FileSystem -eq 'FAT32' | Format-Table DriveLetter, FileSystemLabel, Size   # find the key's drive letter
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\deploy-usb.ps1 -Drive E                # E = that letter
+```
+
+`-ExecutionPolicy Bypass` only applies to this command: the system execution policy is unchanged. The script refuses a target that is not on USB (`-AllowNonUsb` to force) or that sits on the Windows system disk.
+
+**macOS → internal ESP.**
+
+```bash
+cd <path to the repository>
+diskutil list                  # find the EFI partition, e.g. disk0s1
+./tools/sync-esp.sh disk0s1    # asks for your password (sudo) to mount the ESP
+```
 
 Add `--debug-boot` (macOS) or `-DebugBoot` (Windows) for a verbose boot with OpenCore file logs. Both only change the deployed copy, never the repository.
 
-The target must be a FAT32 partition. The previous `EFI` folder is backed up first (`~/EFI-backups/` on Windows), then replaced.
+The target must be a FAT32 partition. The previous `EFI` folder is backed up first to `EFI-backups/` in your home folder, then replaced.
 
 Windows prerequisites: Python 3 in `PATH` (not the Microsoft Store alias) and `ocvalidate.exe` from the matching OpenCore release in `tools/bin/`.
 
@@ -298,6 +313,12 @@ Deploy with `--debug-boot` / `-DebugBoot`. You get `-v debug=0x100`, OpenCore lo
 <summary><b>No sound from the onboard jacks</b></summary>
 
 Check *System Information → Audio*: the Realtek codec must be listed. Add `-shdaoff` to compare with `SimpleHDA` disabled, or use its `DEBUG` build with `-shdadbg` for logs. The optional `SimpleHDA-HAL` package (from the [SimpleHDA release](https://github.com/laobamac/SimpleHDA/releases)) adds AppleHDA-specific CoreAudio controls and is detected automatically. Remove any other AppleHDA restore method or root patch first.
+</details>
+
+<details>
+<summary><b>A USB socket does not work at all in macOS</b></summary>
+
+Its port is missing from `UTBMap.kext`: USBToolBox disables every port left out of the map. This happens when a socket was never plugged during discovery. Plug a USB 2 then a USB 3 device into it in USBToolBox on Windows to read its port numbers, then add the HS and SS ports with the same name (see [USB map](#usb-map)). If Windows does not see it either, check *Advanced → USB Configuration → USB Single Port Control* in BIOS.
 </details>
 
 <details>

@@ -5,7 +5,7 @@ Les vraies valeurs vivent dans tools/bin/platforminfo.local.json (gitignore).
 Le config.plist du depot ne contient que des placeholders.
 PlatformInfo/Automatic=true : seules les 4 cles de Generic sont gerees.
 
-  inject <staging>  copie EFI/ dans <staging>/EFI et y injecte les vraies valeurs
+  inject <staging>  copie EFI/ dans <staging>/EFI (sans ._* ni .DS_Store) et y injecte les vraies valeurs
   check             echoue si une valeur reelle est presente dans le depot
   sanitize          remplace les valeurs du depot par des placeholders
   export            ecrit les valeurs actuelles du depot dans le JSON (sans les afficher)
@@ -141,7 +141,7 @@ def cmd_inject(config, staging):
     dst_efi = staging / "EFI"
     if dst_efi.exists():
         shutil.rmtree(dst_efi)
-    shutil.copytree(EFI_DIR, dst_efi)
+    shutil.copytree(EFI_DIR, dst_efi, ignore=shutil.ignore_patterns(".DS_Store", "._*"))
 
     out = dst_efi / CONFIG_REL
     plist = load(out)

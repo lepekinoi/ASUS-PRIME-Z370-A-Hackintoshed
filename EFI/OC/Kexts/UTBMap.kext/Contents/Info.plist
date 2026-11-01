@@ -67,6 +67,28 @@
 					<key>HS03</key>
 					<dict>
 						<key>#comment</key>
+						<string>Arriere USB 3 bleu 3</string>
+						<key>UsbConnector</key>
+						<integer>3</integer>
+						<key>port</key>
+						<data>
+						AwAAAA==
+						</data>
+					</dict>
+					<key>HS04</key>
+					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 4</string>
+						<key>UsbConnector</key>
+						<integer>3</integer>
+						<key>port</key>
+						<data>
+						BAAAAA==
+						</data>
+					</dict>
+					<key>HS05</key>
+					<dict>
+						<key>#comment</key>
 						<string>Arriere USB 3 bleu 1</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
@@ -75,7 +97,7 @@
 						BQAAAA==
 						</data>
 					</dict>
-					<key>HS04</key>
+					<key>HS06</key>
 					<dict>
 						<key>#comment</key>
 						<string>Arriere USB 3 bleu 2</string>
@@ -86,7 +108,7 @@
 						BgAAAA==
 						</data>
 					</dict>
-					<key>HS05</key>
+					<key>HS07</key>
 					<dict>
 						<key>#comment</key>
 						<string>Arriere USB 2 noir 1</string>
@@ -97,7 +119,7 @@
 						DQAAAA==
 						</data>
 					</dict>
-					<key>HS06</key>
+					<key>HS08</key>
 					<dict>
 						<key>#comment</key>
 						<string>Arriere USB 2 noir 2</string>
@@ -132,6 +154,28 @@
 					</dict>
 					<key>SS03</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 3</string>
+						<key>UsbConnector</key>
+						<integer>3</integer>
+						<key>port</key>
+						<data>
+						EwAAAA==
+						</data>
+					</dict>
+					<key>SS04</key>
+					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 4</string>
+						<key>UsbConnector</key>
+						<integer>3</integer>
+						<key>port</key>
+						<data>
+						FAAAAA==
+						</data>
+					</dict>
+					<key>SS05</key>
+					<dict>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -141,7 +185,7 @@
 						<key>#comment</key>
 						<string>Arriere USB 3 bleu 1</string>
 					</dict>
-					<key>SS04</key>
+					<key>SS06</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>3</integer>
