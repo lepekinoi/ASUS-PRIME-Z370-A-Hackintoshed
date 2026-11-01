@@ -157,6 +157,8 @@ keepsyms=1 revpatch=sbvmm
 | `revpatch=sbvmm` | With `RestrictEvents`, lets macOS offer updates to an unsupported Mac model |
 | `keepsyms=1` | Readable kernel panic logs; also required by `SimpleHDA` |
 
+The shipped EFI boots quietly: no `-v`, and OpenCore logging is off (`Misc/Debug/Target` = 0). For a verbose boot with logs, deploy with `--debug-boot` / `-DebugBoot` (see [Troubleshooting](#-troubleshooting)).
+
 The onboard audio `layout-id` (7) is set in `DeviceProperties` on `PciRoot(0x0)/Pci(0x1F,0x3)`, not with `alcid`.
 
 ### USB map
