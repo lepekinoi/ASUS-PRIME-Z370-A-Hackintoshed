@@ -82,6 +82,7 @@
 | 🔴 | Serial Port → **Disabled** | Advanced → Onboard Devices |
 | 🔴 | **iGPU Multi-Monitor** → **Disabled**, Primary Display → **PEG** | Advanced → System Agent → Graphics Configuration |
 | 🔴 | **Thunderbolt support** → **Disabled** | Advanced → Thunderbolt Configuration |
+| 🔴 | **Re-Size BAR Support** → **Disabled** | Right below Above 4G Decoding |
 | 🟢 | VT-x, Hyper-Threading, Execute Disable Bit → **Enabled** | Advanced → CPU Configuration |
 | 🟢 | **Above 4G Decoding** → **Enabled** | Advanced → System Agent Configuration |
 | 🟢 | XHCI / EHCI Hand-off → **Enabled** | Advanced → USB Configuration |
@@ -93,6 +94,7 @@
 - **CFG Lock** must be off: macOS writes MSR `0xE2` during power management. `AppleXcpmCfgLock` stays enabled anyway as a safety net (see [Design decisions](#-design-decisions)).
 - **iGPU off** is required by `MacPro7,1`, a model that has no integrated graphics. Leaving it on causes panics.
 - **Above 4G Decoding** is mandatory for the Vega 64's large BAR.
+- **Re-Size BAR off**: the firmware could then give the Vega 64 a BAR over 1 GB, which macOS handles poorly (black screen, no acceleration or a stuck boot). The config leaves BAR sizes alone (`ResizeAppleGpuBars` and `ResizeGpuBars` = `-1`), which assumes Re-Size BAR is off.
 - **VT-d off** lets `DisableIoMapper` stay off.
 - **CSM on** produces `gIO` errors at the OpenCore picker; OpenCore needs pure UEFI.
 - **AHCI**: macOS does not see disks in RAID mode.
@@ -305,6 +307,7 @@ These choices are deliberate. Please don't "fix" them without reading why.
 | **`SSDT-AWAC`, no `SSDT-PMC`** | Z370 needs `SSDT-AWAC` for the RTC. `SSDT-PMC` only applies to true 300-series chipsets (Z390, B360…) and is not shipped; `validate` still fails if both are enabled. |
 | **Audio through `SimpleHDA` + `AppleALC`** | macOS 26 no longer ships `AppleHDA.kext`. `SimpleHDA` injects Apple's original AppleHDA through OpenCore (no system volume patch, no root patch), so `AppleALC` works as before. Load order: `Lilu` → `AppleALC` → `SimpleHDA`. `SimpleHDA` is limited to Darwin 25 (`MinKernel` 25.0.0, `MaxKernel` 25.99.99). |
 | **Thunderbolt disabled in BIOS** | No Thunderbolt card is installed. The option would only reserve PCI resources and shift the ASMedia bus numbers used by the USB map. |
+| **Re-Size BAR disabled in BIOS** | No gain: macOS does not use it, and on Windows AMD Smart Access Memory needs an RX 6000 or newer. Enabling it would also require `ResizeAppleGpuBars = 0` to keep the Vega 64's BAR within what macOS supports. |
 | **No Wi-Fi / Bluetooth** | No module is supported on Tahoe at this time; the Bluetooth module was unplugged and its internal USB port is not mapped. |
 | **ASMedia USB matched by `pcidebug`** | Both ASMedia controllers share the ACPI name `PXSX`, so their PCI address is the only stable way to tell them apart. The PCIe card must stay in its slot. |
 | **Only loaded files ship** | Every driver, kext and resource in `EFI/` is referenced by `config.plist`. Unused OpenCore drivers, tools and the Syrah/Chardonnay themes are not included. |
