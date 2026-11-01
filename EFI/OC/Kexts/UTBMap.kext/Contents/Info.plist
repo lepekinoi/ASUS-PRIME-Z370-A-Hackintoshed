@@ -44,6 +44,8 @@
 				<dict>
 					<key>HS01</key>
 					<dict>
+						<key>#comment</key>
+						<string>Facade USB 3 gauche</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -53,6 +55,8 @@
 					</dict>
 					<key>HS02</key>
 					<dict>
+						<key>#comment</key>
+						<string>Facade USB 3 droite</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -62,6 +66,8 @@
 					</dict>
 					<key>HS03</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 1</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -71,6 +77,8 @@
 					</dict>
 					<key>HS04</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 2</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -80,15 +88,8 @@
 					</dict>
 					<key>HS05</key>
 					<dict>
-						<key>UsbConnector</key>
-						<integer>255</integer>
-						<key>port</key>
-						<data>
-						CgAAAA==
-						</data>
-					</dict>
-					<key>HS06</key>
-					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 2 noir 1</string>
 						<key>UsbConnector</key>
 						<integer>0</integer>
 						<key>port</key>
@@ -96,8 +97,10 @@
 						DQAAAA==
 						</data>
 					</dict>
-					<key>HS07</key>
+					<key>HS06</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 2 noir 2</string>
 						<key>UsbConnector</key>
 						<integer>0</integer>
 						<key>port</key>
@@ -113,6 +116,8 @@
 						<data>
 						EQAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Facade USB 3 gauche</string>
 					</dict>
 					<key>SS02</key>
 					<dict>
@@ -122,6 +127,8 @@
 						<data>
 						EgAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Facade USB 3 droite</string>
 					</dict>
 					<key>SS03</key>
 					<dict>
@@ -131,6 +138,8 @@
 						<data>
 						FQAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 1</string>
 					</dict>
 					<key>SS04</key>
 					<dict>
@@ -140,6 +149,8 @@
 						<data>
 						FgAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Arriere USB 3 bleu 2</string>
 					</dict>
 				</dict>
 			</dict>
@@ -175,6 +186,8 @@
 						<data>
 						AwAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Arriere USB-C</string>
 					</dict>
 					<key>HS02</key>
 					<dict>
@@ -184,9 +197,13 @@
 						<data>
 						BAAAAA==
 						</data>
+						<key>#comment</key>
+						<string>Arriere USB 3.1 bleu ciel</string>
 					</dict>
 					<key>SS01</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB-C</string>
 						<key>UsbConnector</key>
 						<integer>9</integer>
 						<key>port</key>
@@ -196,6 +213,8 @@
 					</dict>
 					<key>SS02</key>
 					<dict>
+						<key>#comment</key>
+						<string>Arriere USB 3.1 bleu ciel</string>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
@@ -232,25 +251,31 @@
 					<key>HS01</key>
 					<dict>
 						<key>UsbConnector</key>
-						<integer>3</integer>
+						<integer>9</integer>
 						<key>port</key>
 						<data>
 						AwAAAA==
 						</data>
+						<key>#comment</key>
+						<string>PCIe USB-C 1</string>
 					</dict>
 					<key>HS02</key>
 					<dict>
 						<key>UsbConnector</key>
-						<integer>3</integer>
+						<integer>9</integer>
 						<key>port</key>
 						<data>
 						BAAAAA==
 						</data>
+						<key>#comment</key>
+						<string>PCIe USB-C 2</string>
 					</dict>
 					<key>SS01</key>
 					<dict>
+						<key>#comment</key>
+						<string>PCIe USB-C 1</string>
 						<key>UsbConnector</key>
-						<integer>3</integer>
+						<integer>9</integer>
 						<key>port</key>
 						<data>
 						AQAAAA==
@@ -258,8 +283,10 @@
 					</dict>
 					<key>SS02</key>
 					<dict>
+						<key>#comment</key>
+						<string>PCIe USB-C 2</string>
 						<key>UsbConnector</key>
-						<integer>3</integer>
+						<integer>9</integer>
 						<key>port</key>
 						<data>
 						AgAAAA==
